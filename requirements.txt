@@ -1,4 +1,10 @@
-yt-dlp
 static-ffmpeg
+yt-dlp
 requests
+azure-storage-blob
 python-dotenv
+chromadb
+openai
+pandas
+pdfplumber
+openpyxl

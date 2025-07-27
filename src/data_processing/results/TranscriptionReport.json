@@ -1,0 +1,10 @@
+{
+  "successfulTranscriptionsCount": 1,
+  "failedTranscriptionsCount": 0,
+  "details": [
+    {
+      "source": "https://dtsa560043.blob.core.windows.net/speechdata/Migraine treatment options\uFF1A Real experience of Aimovig_mono.mp3",
+      "status": "Succeeded"
+    }
+  ]
+}
