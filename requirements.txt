@@ -8,3 +8,17 @@ openai
 pandas
 pdfplumber
 openpyxl
+langchain
+langchain-openai
+openai
+azure-identity
+langgraph
+langgraph-sdk
+langchain-core
+langchain-community
+orjson
+httpx
+tenacity
+structlog
+cloudpickle
+biopython
