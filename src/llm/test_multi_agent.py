@@ -4,6 +4,8 @@ import os
 from dotenv import load_dotenv
 from langchain_openai import AzureChatOpenAI
 from src.llm.multi_agents import build_initial_state, build_agentic_workflow
+from src.knowledge_stores.migraine import load_vectorstore
+from src.llm.models import azure_openai_embedding_model
 
 # Load Azure credentials from .env
 load_dotenv()
@@ -16,17 +18,11 @@ llm = AzureChatOpenAI(
     api_version=os.getenv("AZURE_OPENAI_API_VERSION")
 )
 
-# Dummy Tool for testing
-class DummyTool:
-    name = "migraine_qa_csv"
-    description = "CSV tool to answer migraine-related queries."
 
-    def run(self, query):
-        return f"CSV result for query: {query}"
 
 # Build tool list and initial state
-tool_list = [DummyTool()]
-question = "How effective is Aimovig in treating chronic migraine?"
+tool_list = load_vectorstore(azure_openai_embedding_model)
+question = "Is there any side effects of using Aimovig from your personal experience?"
 state = build_initial_state(llm=llm, tool_list=tool_list, question=question)
 
 # Build graph and invoke it

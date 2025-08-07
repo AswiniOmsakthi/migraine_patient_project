@@ -9,7 +9,6 @@ from openai import AzureOpenAI
 
 load_dotenv()
 
-# Azure OpenAI setup
 ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT")
 API_KEY = os.getenv("AZURE_OPENAI_API_KEY")
 API_VERSION = os.getenv("AZURE_OPENAI_API_VERSION")
@@ -17,16 +16,22 @@ DEPLOYMENT = os.getenv("AZURE_OPENAI_EMBED_DEPLOYMENT")
 assert ENDPOINT and API_KEY and API_VERSION and DEPLOYMENT, "Missing Azure env vars"
 
 client = AzureOpenAI(azure_endpoint=ENDPOINT, api_key=API_KEY, api_version=API_VERSION)
+
 class FunctionEmbedding:
     def __init__(self, fn, name="azure_embed_fn"):
-        self.fn = fn; self._name = name
+        self.fn = fn
+        self._name = name
     def __call__(self, input: list[str]):
         return self.fn(input)
     def name(self):
         return self._name
 
 def azure_embed(input: list[str]) -> list[list[float]]:
-    resp = client.embeddings.create(model=DEPLOYMENT, input=input)
+    resp = client.embeddings.create(
+        model=DEPLOYMENT,
+        input=input,
+        dimensions=1024  # truncate embeddings to 1024 dims
+    )
     return [item.embedding for item in resp.data]
 
 emb_fn = FunctionEmbedding(azure_embed, name=f"azure-{DEPLOYMENT}")
@@ -37,8 +42,7 @@ def safe_collection_name(s: str) -> str:
 
 def chunk_text(text: str, chunk_size=500, overlap=50) -> list[str]:
     words = text.split()
-    chunks = []
-    i = 0
+    chunks, i = [], 0
     while i < len(words):
         chunks.append(" ".join(words[i:i+chunk_size]))
         i += chunk_size - overlap
@@ -58,10 +62,15 @@ def get_persistent_client():
 def process_qa_csv(cli):
     df = pd.read_csv(QA_CSV_PATH, dtype=str).fillna("")
     df.columns = df.columns.str.strip().str.lower()
+    # Remove first or delete existing collection if dimension mismatch
+    try:
+        cli.delete_collection("migraine_QA")
+    except Exception:
+        pass
     coll = cli.get_or_create_collection("migraine_QA", embedding_function=emb_fn)
     total = 0
     for idx, row in df.iterrows():
-        q, a = row.get("question","").strip(), row.get("answer","").strip()
+        q, a = row.get("question", "").strip(), row.get("answer", "").strip()
         if not (q or a):
             continue
         text = f"Q: {q}\n\nA: {a}"
@@ -91,7 +100,12 @@ def ingest_pdfs(cli):
             continue
         chunks = chunk_text(text)
         pdf_summary[fname] = len(chunks)
-        coll = cli.get_or_create_collection(safe_collection_name(path.stem), embedding_function=emb_fn)
+        coll_name = safe_collection_name(path.stem)
+        try:
+            cli.delete_collection(coll_name)
+        except Exception:
+            pass
+        coll = cli.get_or_create_collection(coll_name, embedding_function=emb_fn)
         coll.add(
             documents=chunks,
             ids=[f"{fname}_chunk{cid}" for cid in range(len(chunks))],
@@ -114,9 +128,6 @@ def build_in_memory(pers_cli):
 def main():
     print("Excel exists?", EXCEL_PATH.exists(), "| PDFs folder exists?", PDF_FOLDER.exists())
     pers = get_persistent_client()
-
-    # optional reset on dimension mismatch:
-    # pers.delete_collection("migraine_QA")
 
     process_qa_csv(pers)
     ingest_pdfs(pers)

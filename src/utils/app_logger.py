@@ -15,7 +15,7 @@ LOG_FORMAT = logging.Formatter("%(asctime)s:%(levelname)s:%(name)s:%(module)s:%(
 LOG_HANDLER = logging.StreamHandler(sys.stdout)
 
 # Module logger
-LOGGER = logging.getLogger("stroke_ai_persona")
+LOGGER = logging.getLogger("migraine_ai_persona")
 
 LOGGER.setLevel(LOG_LEVEL)
 LOG_HANDLER.setLevel(LOG_LEVEL)
