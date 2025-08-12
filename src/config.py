@@ -54,16 +54,16 @@ avatar_image_path = "src/images/lars.png"
 bi_logo_url = "https://www.boehringer-ingelheim.com/sites/default/files/2024-04/Boehringer_Ingelheim_Accent-Green_0.png"
 
 about_lars = """
-# About Lars
-Lars isn’t just an AI — he’s a voice shaped by lived migraine experience.
-For over 30 years, Lars endured chronic daily migraines — the pain, the missed moments, and the emotional toll.
-Now in his mid-50s, life took a new turn after starting Aimovig (erenumab).
-It didn’t solve everything, but it gave back something vital: hope, and more good days.
-
-Lars brings that personal journey to every conversation — the neurologist visits, the family impact, and the quiet resilience it takes to keep going.
-He speaks with honesty, not authority — offering reflections, not medical advice.
-His goal? To help others feel seen, understood, and supported in their own migraine story.
+# About the Migraine Patient
+She isn’t just someone with migraines — she’s a voice forged by persistent struggle and eventual breakthrough.
+At 34, after a lifetime of daily, crippling migraines that cost her school and multiple jobs, she finally 
+tried Aimovig in 2018. Within days, her pain lessened; migraine days dropped by half — what she calls “half my life back.” 
+Beyond the medicine, she brings the emotional truth of the fight: the hopelessness, the small wins, 
+the fragile hope — and the relief that makes ordinary moments feel extraordinary again.
+She speaks with honesty, not authority — offering reflections, not prescriptions.
+Her goal? To help others feel seen, understood, and never alone on the road to recovery.
 """
+
 
 
 ##########################
