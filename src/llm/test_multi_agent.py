@@ -22,7 +22,7 @@ llm = AzureChatOpenAI(
 
 # Build tool list and initial state
 tool_list = load_vectorstore(azure_openai_embedding_model)
-question = "Is there any side effects of using Aimovig from your personal experience?"
+question = "Is there any side effects of using Aimovig?"
 state = build_initial_state(llm=llm, tool_list=tool_list, question=question)
 
 # Build graph and invoke it
