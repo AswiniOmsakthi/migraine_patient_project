@@ -17,7 +17,7 @@ CHAT_MODEL_PARAMETERS: dict = {
     "frequency_penalty": 0.0,
     "presence_penalty": 0,
     "stop": None,
-    "engine": "gpt-4.1-mini"
+    "engine": "gpt-5-chat"
 }
 
 ###########################################
